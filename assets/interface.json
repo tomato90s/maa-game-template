@@ -1,0 +1,47 @@
+{
+    "interface_version": 2,
+    "name": "maa-game-template",
+    "title": "MAA Game Template",
+    "description": "A clean MaaFramework game automation project template.",
+    "version": "v0.0.0",
+    "github": "https://github.com/OWNER/REPO",
+    "welcome": "Welcome to MAA Game Template. Rename the project metadata, replace the sample package name, add game screenshots, then build your own tasks.",
+    "controller": [
+        {
+            "name": "Android",
+            "type": "Adb",
+            "display_short_side": 720
+        }
+    ],
+    "resource": [
+        {
+            "name": "Default",
+            "path": [
+                "./resource"
+            ]
+        }
+    ],
+    "task": [],
+    "group": [
+        {
+            "name": "system",
+            "label": "System"
+        },
+        {
+            "name": "example",
+            "label": "Examples"
+        }
+    ],
+    "agent": {
+        "child_exec": "python",
+        "child_args": [
+            "-u",
+            "./../agent/main.py"
+        ]
+    },
+    "option": {},
+    "import": [
+        "resource/tasks/system/startup_task.json",
+        "resource/tasks/example/example_task.json"
+    ]
+}

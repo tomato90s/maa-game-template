@@ -1,0 +1,208 @@
+name: install
+
+env:
+  PROJECT_ID: MaaGameTemplate
+  MAAFW_VERSION: ""
+
+on:
+  push:
+    tags:
+      - "v*"
+    branches:
+      - "**"
+    paths:
+      - ".github/workflows/install.yml"
+      - "assets/**"
+      - "agent/**"
+      - "ci/**"
+      - "tools/**"
+      - "**.py"
+  pull_request:
+    branches:
+      - "**"
+    paths:
+      - ".github/workflows/install.yml"
+      - "assets/**"
+      - "agent/**"
+      - "ci/**"
+      - "tools/**"
+      - "**.py"
+  workflow_dispatch:
+    inputs:
+      maafw_version:
+        description: "MaaFramework tag to download. Empty means latest."
+        required: false
+        default: ""
+
+jobs:
+  meta:
+    runs-on: ubuntu-latest
+    outputs:
+      tag: ${{ steps.set_tag.outputs.tag }}
+      is_release: ${{ steps.set_tag.outputs.is_release }}
+      is_prerelease: ${{ steps.set_tag.outputs.is_prerelease }}
+      maafw_version: ${{ steps.set_tag.outputs.maafw_version }}
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - id: set_tag
+        shell: bash
+        run: |
+          is_release=${{ startsWith(github.ref, 'refs/tags/v') }}
+          tag=$(git describe --tags --match "v*" ${{ github.ref }} || true)
+          if [[ $tag != v* ]]; then
+            latest=$(curl -sX GET "https://api.github.com/repos/${{ github.repository }}/releases/latest" --header 'authorization: Bearer ${{ secrets.GITHUB_TOKEN }}' | awk '/tag_name/{print $4}' FS='["]')
+            if [[ $latest != v* ]]; then
+              latest="v0.0.0"
+            fi
+            tag=$(date "+$latest-%y%m%d-$(git rev-parse --short HEAD)")
+          fi
+
+          if [[ "$is_release" != "true" ]]; then
+            prefix=${tag%-*-*}
+            suffix=${tag#$prefix-}
+            tag="$prefix-ci.$suffix"
+          fi
+
+          is_prerelease=false
+          if [[ $tag =~ .*alpha.* || $tag =~ .*beta.* || $tag =~ .*rc.* || $tag =~ .*dev.* || $tag =~ .*-ci.* ]]; then
+            is_prerelease=true
+          fi
+
+          maafw_version="${{ github.event.inputs.maafw_version || env.MAAFW_VERSION }}"
+
+          echo "tag=$tag" | tee -a "$GITHUB_OUTPUT"
+          echo "is_release=$is_release" | tee -a "$GITHUB_OUTPUT"
+          echo "is_prerelease=$is_prerelease" | tee -a "$GITHUB_OUTPUT"
+          echo "maafw_version=$maafw_version" | tee -a "$GITHUB_OUTPUT"
+
+  install:
+    needs: meta
+    runs-on: ${{ matrix.runs-on }}
+    strategy:
+      fail-fast: false
+      matrix:
+        include:
+          - os: win
+            arch: x86_64
+            runs-on: windows-latest
+          - os: macos
+            arch: aarch64
+            runs-on: macos-latest
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Download MaaFramework
+        uses: robinraju/release-downloader@v1
+        with:
+          repository: MaaXYZ/MaaFramework
+          fileName: "MAA-${{ matrix.os }}-${{ matrix.arch }}*"
+          latest: ${{ needs.meta.outputs.maafw_version == '' }}
+          tag: ${{ needs.meta.outputs.maafw_version }}
+          out-file-path: "deps"
+          extract: true
+
+      - name: Setup Embed Python (Windows)
+        if: matrix.os == 'win'
+        shell: pwsh
+        run: ./ci/setup_embed_python.ps1
+
+      - name: Setup Embed Python (macOS)
+        if: matrix.os == 'macos'
+        shell: bash
+        run: |
+          chmod +x ./ci/setup_embed_python.sh
+          ./ci/setup_embed_python.sh
+
+      - name: Install
+        shell: bash
+        run: |
+          cd tools
+          python -m pip install -r ./requirements.txt
+          python ./install.py ${{ needs.meta.outputs.tag }} ${{ matrix.os }} ${{ matrix.arch }}
+
+      - name: Install agent dependencies
+        shell: bash
+        run: |
+          if [ "${{ matrix.os }}" = "win" ]; then
+            ./install/python/python.exe -m pip install -r ./requirements.txt
+          else
+            ./install/python/bin/python -m pip install -r ./requirements.txt
+          fi
+
+      - uses: actions/upload-artifact@v4
+        with:
+          name: ${{ env.PROJECT_ID }}-${{ matrix.os }}-${{ matrix.arch }}
+          path: install
+
+  release:
+    if: ${{ needs.meta.outputs.is_release == 'true' }}
+    needs: [meta, install]
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/download-artifact@v4
+        with:
+          path: release-artifacts
+          pattern: ${{ env.PROJECT_ID }}-*
+
+      - name: Generate resource update packages
+        shell: bash
+        run: |
+          python -m pip install -r tools/requirements.txt
+          for ARTIFACT_DIR in release-artifacts/${{ env.PROJECT_ID }}-*; do
+            PLATFORM=$(basename "$ARTIFACT_DIR" | sed 's/${{ env.PROJECT_ID }}-//')
+            ROOT_DIR="$ARTIFACT_DIR"
+            if [ ! -f "$ROOT_DIR/interface.json" ] && [ -d "$ROOT_DIR/install" ]; then
+              ROOT_DIR="$ROOT_DIR/install"
+            fi
+
+            python tools/generate_update.py \
+              --version "${{ needs.meta.outputs.tag }}" \
+              --root "$ROOT_DIR" \
+              --output-dir . \
+              --platform "$PLATFORM" \
+              --github-repo "${{ github.repository }}" \
+              --include \
+                "agent/**/*.py" \
+                "resource/**/*.json" \
+                "resource/image/**/*" \
+                "resource/model/**/*" \
+                "interface.json"
+          done
+
+      - name: Zip release artifacts
+        shell: bash
+        run: |
+          cd release-artifacts
+          for f in ${{ env.PROJECT_ID }}-*; do
+            if [ -d "$f" ] && [ -n "$(ls -A "$f" 2>/dev/null)" ]; then
+              (cd "$f" && zip -r "../$f-${{ needs.meta.outputs.tag }}.zip" .)
+            fi
+          done
+
+      - uses: softprops/action-gh-release@v2
+        with:
+          files: |
+            release-artifacts/*-v*.zip
+            resource-manifest-*.json
+            resource-update-*.zip
+          tag_name: ${{ needs.meta.outputs.tag }}
+          draft: false
+          prerelease: ${{ needs.meta.outputs.is_prerelease == 'true' }}
+
+      # MirrorChyan is a third-party distribution service. It is disabled by
+      # default for public templates; enable it only after your project has a
+      # configured MirrorChyan account and workflow.
+      - name: Trigger MirrorChyanUploading
+        if: false
+        shell: bash
+        run: |
+          gh workflow run --repo "$GITHUB_REPOSITORY" mirrorchyan_release.yml -f tag=${{ needs.meta.outputs.tag }}
+          gh workflow run --repo "$GITHUB_REPOSITORY" mirrorchyan_release_note.yml -f tag=${{ needs.meta.outputs.tag }}
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}

@@ -1,0 +1,8 @@
+{
+    "NoopDone": {},
+    "StopTask": {
+        "action": {
+            "type": "StopTask"
+        }
+    }
+}

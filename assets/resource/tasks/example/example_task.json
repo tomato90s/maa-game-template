@@ -1,0 +1,14 @@
+{
+    "task": [
+        {
+            "name": "Example Task",
+            "entry": "ExampleTask",
+            "group": [
+                "example"
+            ],
+            "label": "Example Task",
+            "description": "A placeholder task used to verify the template project structure."
+        }
+    ],
+    "option": {}
+}

@@ -1,0 +1,27 @@
+name: Generated project help
+description: Ask for help with a project created from this template.
+title: "[Generated Project]: "
+labels:
+  - question
+body:
+  - type: markdown
+    attributes:
+      value: |
+        If the issue is specific to your generated game project, open it in that project repository when possible. This form is for template migration or bootstrap questions.
+  - type: input
+    id: template_version
+    attributes:
+      label: Template version or commit
+      description: Paste the template commit used to create your project, if known.
+  - type: textarea
+    id: question
+    attributes:
+      label: Question
+      description: What are you trying to do?
+    validations:
+      required: true
+  - type: textarea
+    id: details
+    attributes:
+      label: Relevant files or logs
+      description: Include paths, workflow logs, or command output.

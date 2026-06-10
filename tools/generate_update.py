@@ -1,0 +1,92 @@
+import argparse
+import hashlib
+import json
+import os
+import zipfile
+from pathlib import Path
+
+DEFAULT_GITHUB_REPO = "OWNER/REPO"
+
+
+def file_hash(path: Path) -> str:
+    h = hashlib.sha256()
+    with open(path, "rb") as f:
+        for chunk in iter(lambda: f.read(65536), b""):
+            h.update(chunk)
+    return f"sha256:{h.hexdigest()}"
+
+
+def generate(
+    root: Path,
+    patterns: list[str],
+    version: str,
+    out_dir: Path,
+    github_repo: str,
+    platform: str = "",
+):
+    suffix = f"-{platform}" if platform else ""
+    files = {}
+    out_dir.mkdir(parents=True, exist_ok=True)
+    zip_path = out_dir / f"resource-update-{version}{suffix}.zip"
+
+    with zipfile.ZipFile(zip_path, "w", zipfile.ZIP_DEFLATED) as zf:
+        for pattern in patterns:
+            for path in root.glob(pattern):
+                if not path.is_file():
+                    continue
+                rel = path.relative_to(root).as_posix()
+                files[rel] = {
+                    "hash": file_hash(path),
+                    "size": path.stat().st_size,
+                }
+                zf.write(path, rel)
+
+    if not files:
+        raise RuntimeError(
+            "No files matched include patterns. "
+            f"root={root}, include={patterns}"
+        )
+
+    manifest = {
+        "version": version,
+        "update_url": (
+            f"https://github.com/{github_repo}"
+            f"/releases/download/{version}/resource-update-{version}{suffix}.zip"
+        ),
+        "files": files,
+    }
+
+    manifest_path = out_dir / f"resource-manifest{suffix}.json"
+    with open(manifest_path, "w", encoding="utf-8") as f:
+        json.dump(manifest, f, ensure_ascii=False, indent=2)
+
+    print(f"manifest: {manifest_path} ({len(files)} files)")
+    print(f"zip: {zip_path}")
+
+
+if __name__ == "__main__":
+    parser = argparse.ArgumentParser()
+    parser.add_argument("--version", required=True)
+    parser.add_argument("--root", required=True, type=Path)
+    parser.add_argument("--output-dir", required=True, type=Path)
+    parser.add_argument("--include", nargs="+", required=True)
+    parser.add_argument(
+        "--platform",
+        default="",
+        help="Platform tag (e.g. win-x86_64, macos-aarch64). Empty = generic",
+    )
+    parser.add_argument(
+        "--github-repo",
+        default=os.environ.get("GITHUB_REPOSITORY", DEFAULT_GITHUB_REPO),
+        help="GitHub repository in owner/repo format. Defaults to GITHUB_REPOSITORY.",
+    )
+    args = parser.parse_args()
+
+    generate(
+        args.root,
+        args.include,
+        args.version,
+        args.output_dir,
+        args.github_repo,
+        args.platform,
+    )

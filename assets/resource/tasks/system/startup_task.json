@@ -1,0 +1,13 @@
+{
+    "task": [
+        {
+            "name": "Start Game",
+            "entry": "startup",
+            "group": [
+                "system"
+            ],
+            "label": "Start Game"
+        }
+    ],
+    "option": {}
+}

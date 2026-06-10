@@ -1,0 +1,6 @@
+install/
+node_modules/
+deps/
+release-artifacts/
+resource-update-*.zip
+resource-manifest-*.json

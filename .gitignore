@@ -1,0 +1,34 @@
+# Dependencies
+node_modules/
+.maa-tools/
+
+# Build output
+install/
+deps/
+!deps/
+deps/*
+!deps/tools/
+!deps/tools/*.schema.json
+release-artifacts/
+resource-update-*.zip
+resource-manifest-*.json
+
+# Maa runtime output
+assets/debug/
+assets/resource/debug/
+*.log
+
+# Local editor and OS files
+.DS_Store
+.vscode/
+.idea/
+
+# Python
+__pycache__/
+*.py[cod]
+.venv/
+venv/
+
+# Optional worktrees
+.worktrees/
+worktrees/

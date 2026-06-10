@@ -1,0 +1,13 @@
+{
+    "ExampleTask": {
+        "desc": "Template task entry. Replace this node with real recognition and action nodes.",
+        "next": [
+            "ExampleDone"
+        ]
+    },
+    "ExampleDone": {
+        "next": [
+            "NoopDone"
+        ]
+    }
+}

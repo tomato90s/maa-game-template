@@ -1,0 +1,23 @@
+{
+    "startup": {
+        "next": [
+            "StartApp"
+        ]
+    },
+    "StartApp": {
+        "desc": "Replace package with your game's Android package name.",
+        "action": {
+            "type": "StartApp",
+            "param": {
+                "package": "com.example.game"
+            }
+        },
+        "timeout": 60000,
+        "next": [
+            "NoopDone"
+        ],
+        "on_error": [
+            "StopTask"
+        ]
+    }
+}
