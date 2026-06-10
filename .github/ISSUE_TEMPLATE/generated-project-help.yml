@@ -1,13 +1,13 @@
-name: Generated project help
-description: Ask for help with a project created from this template.
-title: "[Generated Project]: "
+name: Template usage question
+description: Ask for help when adapting this template to your Maa project.
+title: "[Template Usage]: "
 labels:
   - question
 body:
   - type: markdown
     attributes:
       value: |
-        If the issue is specific to your generated game project, open it in that project repository when possible. This form is for template migration or bootstrap questions.
+        If the issue is specific to your Maa project, open it in that project repository when possible. This form is for template usage and migration questions.
   - type: input
     id: template_version
     attributes:

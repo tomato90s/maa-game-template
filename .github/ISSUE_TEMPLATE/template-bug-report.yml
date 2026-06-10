@@ -7,7 +7,7 @@ body:
   - type: markdown
     attributes:
       value: |
-        Use this form for bugs in the template itself, such as broken CI, bad docs, or generated project structure problems.
+        Use this form for bugs in the template itself, such as broken CI, bad docs, or broken default project structure.
   - type: textarea
     id: problem
     attributes:
