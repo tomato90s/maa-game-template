@@ -2,10 +2,10 @@
     "interface_version": 2,
     "name": "maa-game-template",
     "title": "MAA Game Template",
-    "description": "A clean MaaFramework game automation project template.",
+    "description": "MaaFramework game automation project template.",
     "version": "v0.0.0",
-    "github": "https://github.com/OWNER/REPO",
-    "welcome": "Welcome to MAA Game Template. Rename the project metadata, replace the sample package name, add game screenshots, then build your own tasks.",
+    "github": "https://github.com/tomato90s/maa-game-template",
+    "welcome": "Welcome to MAA Game Template. This project contains sample tasks and default Python custom actions. Edit interface.json and resources according to your game project.",
     "controller": [
         {
             "name": "Android",
