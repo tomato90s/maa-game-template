@@ -1,5 +1,4 @@
 import unittest
-from pathlib import Path
 
 from tools import dev
 
@@ -48,29 +47,15 @@ class DevCliTest(unittest.TestCase):
         self.assertIn("owner/repo", commands[0])
         self.assertIn("resource/image/**/*", commands[0])
 
-    def test_bootstrap_forwards_arguments(self):
-        commands = dev.build_commands(
-            [
-                "bootstrap",
-                "--output",
-                "../demo",
-                "--project-name",
-                "maa-demo",
-                "--title",
-                "MAA Demo",
-                "--github-repo",
-                "owner/demo",
-                "--package",
-                "com.example.demo",
-                "--project-id",
-                "MaaDemo",
-                "--yes",
-            ]
+    def test_infer_github_repo_from_common_remote_urls(self):
+        self.assertEqual(
+            dev._parse_github_repo("git@github.com:owner/repo.git"),
+            "owner/repo",
         )
-
-        self.assertEqual(commands[0][0:2], ["python", "tools/bootstrap_project.py"])
-        self.assertIn("--project-name", commands[0])
-        self.assertIn("maa-demo", commands[0])
+        self.assertEqual(
+            dev._parse_github_repo("https://github.com/owner/repo.git"),
+            "owner/repo",
+        )
 
 
 if __name__ == "__main__":

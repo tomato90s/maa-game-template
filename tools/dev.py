@@ -1,5 +1,6 @@
 #!/usr/bin/env python3
 import argparse
+import re
 import subprocess
 import sys
 
@@ -19,16 +20,6 @@ def build_parser():
     )
     subparsers = parser.add_subparsers(dest="command", required=True)
 
-    bootstrap = subparsers.add_parser("bootstrap", help="Create a project from this template.")
-    bootstrap.add_argument("--output", required=True)
-    bootstrap.add_argument("--project-name", required=True)
-    bootstrap.add_argument("--title", required=True)
-    bootstrap.add_argument("--github-repo", required=True)
-    bootstrap.add_argument("--package", required=True)
-    bootstrap.add_argument("--project-id", required=True)
-    bootstrap.add_argument("--description")
-    bootstrap.add_argument("--yes", action="store_true")
-
     subparsers.add_parser("check", help="Run local resource and schema checks.")
 
     package = subparsers.add_parser("package", help="Build the local install/ directory.")
@@ -41,7 +32,11 @@ def build_parser():
         help="Generate a resource update zip and manifest from an install root.",
     )
     update.add_argument("--version", required=True)
-    update.add_argument("--github-repo", required=True)
+    update.add_argument(
+        "--github-repo",
+        default="",
+        help="GitHub repository in owner/repo format. Defaults to git origin.",
+    )
     update.add_argument("--root", default="install")
     update.add_argument("--output-dir", default=".")
     update.add_argument("--platform", default="")
@@ -49,31 +44,35 @@ def build_parser():
     return parser
 
 
+def infer_github_repo():
+    try:
+        result = subprocess.run(
+            ["git", "remote", "get-url", "origin"],
+            check=True,
+            capture_output=True,
+            text=True,
+        )
+    except subprocess.CalledProcessError:
+        return "OWNER/REPO"
+
+    return _parse_github_repo(result.stdout.strip())
+
+
+def _parse_github_repo(remote):
+    patterns = [
+        r"github\.com[:/](?P<repo>[^/]+/[^/.]+)(?:\.git)?$",
+        r"github\.com/(?P<repo>[^/]+/[^/.]+)(?:\.git)?$",
+    ]
+    for pattern in patterns:
+        match = re.search(pattern, remote)
+        if match:
+            return match.group("repo")
+
+    return "OWNER/REPO"
+
+
 def build_commands(argv):
     args = build_parser().parse_args(argv)
-
-    if args.command == "bootstrap":
-        command = [
-            "python",
-            "tools/bootstrap_project.py",
-            "--output",
-            args.output,
-            "--project-name",
-            args.project_name,
-            "--title",
-            args.title,
-            "--github-repo",
-            args.github_repo,
-            "--package",
-            args.package,
-            "--project-id",
-            args.project_id,
-        ]
-        if args.description:
-            command.extend(["--description", args.description])
-        if args.yes:
-            command.append("--yes")
-        return [command]
 
     if args.command == "check":
         return [
@@ -97,6 +96,7 @@ def build_commands(argv):
         return [["python", "tools/install.py", args.version, args.os, args.arch]]
 
     if args.command == "update-package":
+        github_repo = args.github_repo or infer_github_repo()
         return [
             [
                 "python",
@@ -108,7 +108,7 @@ def build_commands(argv):
                 "--output-dir",
                 args.output_dir,
                 "--github-repo",
-                args.github_repo,
+                github_repo,
                 "--include",
                 *RESOURCE_PATTERNS,
                 *(
