@@ -1,38 +1,12 @@
-# Bootstrap a New Game Project
+# Project Bootstrap Checklist
 
 [中文](bootstrap.md)
 
-Start with the smallest working rename, then add real game resources.
+After creating a repository with GitHub **Use this template**, use this checklist to adapt the project.
 
-## Bootstrap Helper
+The template does not generate or rewrite `interface.json`. Implement it yourself according to the Maa ProjectInterface protocol and your project needs.
 
-From this template repository, run:
-
-```bash
-python tools/dev.py bootstrap \
-  --output ../maa-demo-game \
-  --project-name maa-demo-game \
-  --title "MAA Demo Game" \
-  --github-repo your-name/maa-demo-game \
-  --package com.example.game \
-  --project-id MaaDemoGame \
-  --yes
-```
-
-The helper copies the template to the output directory, skips local build/runtime artifacts, and replaces the main project fields.
-
-## Maintainer Note: Enable GitHub Template Mode
-
-If you maintain the template repository itself, enable GitHub template mode after pushing it:
-
-1. Open the repository on GitHub.
-2. Go to **Settings**.
-3. Enable **Template repository**.
-4. Return to the repository home page and use **Use this template** to create new projects.
-
-Repositories created from a template start with a fresh history. They are not forks and do not automatically receive later template updates.
-
-## Required Renames
+## 1. Project Metadata
 
 Edit `assets/interface.json`:
 
@@ -42,26 +16,32 @@ Edit `assets/interface.json`:
 - `github`: your repository URL
 - `welcome`: first-run message shown by compatible launchers
 
+## 2. CI Project Name
+
 Edit `.github/workflows/install.yml`:
 
-- `PROJECT_ID`: artifact prefix used by CI and GitHub Releases
+```yaml
+env:
+  PROJECT_ID: MaaGameTemplate
+```
+
+`PROJECT_ID` is the prefix for CI artifacts and release packages. For a real project, change it to your project name, such as `MaaExampleGame`.
+
+## 3. README
 
 Edit `README.md`:
 
 - Replace the template description with your game-specific description.
 - Document supported emulator, resolution, language, and login assumptions.
+- Remove sample notes that do not fit your project.
 
-## Startup Package
+## 4. Sample Tasks
 
-Replace the placeholder package in `assets/resource/pipeline/startup.json`:
+`assets/resource/pipeline/startup.json` and `assets/resource/pipeline/example.json` are only examples.
 
-```json
-"package": "com.example.game"
-```
+Not every project needs to start the game automatically. If you do not need it, delete the sample startup task or replace it with a node that verifies the game is already open.
 
-Use your actual Android package name. If your project does not start the game automatically, replace `StartApp` with a node that verifies the game is already open.
-
-## Assets
+## 5. Assets
 
 Put screenshots and template images in:
 
@@ -77,7 +57,7 @@ assets/resource/model/ocr/
 
 The template does not include OCR model files by default. Add your own models or copy them from Maa common assets when your project needs OCR.
 
-## Schema Files
+## 6. Schema Files
 
 The template keeps MaaFramework JSON schema files in:
 

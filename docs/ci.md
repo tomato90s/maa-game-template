@@ -13,7 +13,7 @@
 
 这个 workflow 用来在 release 打包前发现任务导入错误、JSON 错误和 schema 错误。
 
-schema 文件保存在 `deps/tools/*.schema.json`，因此本地检查和 CI 不需要额外 bootstrap 步骤。
+schema 文件保存在 `deps/tools/*.schema.json`，因此本地检查和 CI 不需要额外准备步骤。
 
 ## sync_schema_files.yml
 

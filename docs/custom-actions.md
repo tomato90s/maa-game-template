@@ -4,6 +4,8 @@
 
 模板默认启用 Python agent，并在 `agent/actions.py` 中注册几个常用 action。
 
+默认入口写在 `assets/interface.json` 的 `agent` 字段里。需要自定义时，优先改 `agent/actions.py`；如果项目完全不需要 Python 自定义动作，可以删除 `agent` 配置和 `agent/` 目录。
+
 ## CenterClick
 
 点击当前识别框中心。

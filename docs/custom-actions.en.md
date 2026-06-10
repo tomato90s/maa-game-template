@@ -4,6 +4,8 @@
 
 The template enables the Python agent by default and registers common actions in `agent/actions.py`.
 
+The default entrypoint is configured by the `agent` field in `assets/interface.json`. To customize behavior, edit `agent/actions.py`. If your project does not need Python custom actions, you can remove the `agent` config and the `agent/` directory.
+
 ## CenterClick
 
 Clicks the center of the current recognition box.

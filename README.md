@@ -15,38 +15,20 @@
 ## 快速开始
 
 1. 在 GitHub 上点击 **Use this template**，或克隆这个仓库。
-2. 运行初始化脚本：
-
-```bash
-python tools/bootstrap_project.py \
-  --output ../maa-demo-game \
-  --project-name maa-demo-game \
-  --title "MAA Demo Game" \
-  --github-repo your-name/maa-demo-game \
-  --package com.example.game \
-  --project-id MaaDemoGame \
-  --yes
-```
-
-3. 检查并按需修改 `assets/interface.json`：
+2. 根据 Maa ProjectInterface 协议实现或修改 `assets/interface.json`：
    - `name`
    - `title`
    - `description`
    - `github`
    - `welcome`
-4. 将 `assets/resource/pipeline/example.json` 中的示例任务替换成真实的识别和操作节点。
-5. 运行本地检查：
+3. 将 `assets/resource/pipeline/example.json` 中的示例任务替换成真实的识别和操作节点。
+4. 运行本地检查：
 
 ```bash
-npm ci
-npx @nekosu/maa-tools check
-python -m pip install jsonschema==4.26.0 referencing==0.37.0
-python tools/validate_schema.py \
-  --schema-dir deps/tools \
-  --resource-dirs assets/resource/pipeline \
-  --interface-files assets/interface.json \
-  --task-dirs assets/resource/tasks
+python tools/dev.py check
 ```
+
+更多脚本用途见 [脚本和命令说明](docs/scripts.md)。
 
 ## 仓库结构
 
@@ -65,7 +47,7 @@ docs/
 
 ## 文档
 
-- [创建新游戏项目](docs/bootstrap.md)
+- [项目初始化清单](docs/bootstrap.md)
 - [新增任务](docs/add-task.md)
 - [默认 Python 自定义动作](docs/custom-actions.md)
 - [脚本和命令说明](docs/scripts.md)

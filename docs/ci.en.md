@@ -13,7 +13,7 @@ It does two things:
 
 Use this workflow to catch broken task imports, invalid JSON, and schema errors before release packaging.
 
-Schema files are stored in `deps/tools/*.schema.json` so local checks and CI can run without a separate bootstrap step.
+Schema files are stored in `deps/tools/*.schema.json` so local checks and CI can run without an extra preparation step.
 
 ## sync_schema_files.yml
 

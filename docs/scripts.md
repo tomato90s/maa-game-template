@@ -12,27 +12,6 @@ python tools/dev.py <command>
 
 ## 常用命令
 
-### 从模板创建新项目
-
-用于把当前模板复制成一个新的 Maa 游戏项目，并替换项目名、仓库地址、包名和 CI artifact 名称。
-
-```bash
-python tools/dev.py bootstrap \
-  --output ../maa-demo-game \
-  --project-name maa-demo-game \
-  --title "MAA Demo Game" \
-  --github-repo owner/maa-demo-game \
-  --package com.example.game \
-  --project-id MaaDemoGame \
-  --yes
-```
-
-底层脚本是：
-
-```bash
-python tools/bootstrap_project.py ...
-```
-
 ### 运行本地检查
 
 用于提交前检查资源、schema 和 Maa 项目结构。
@@ -101,8 +80,13 @@ deps/
 ```bash
 python tools/dev.py update-package \
   --version v0.0.0 \
-  --github-repo owner/repo \
   --root install
+```
+
+默认会从当前仓库的 GitHub remote 推断仓库名。需要覆盖时再加：
+
+```bash
+--github-repo owner/repo
 ```
 
 输出文件：
@@ -119,12 +103,6 @@ resource-update-v0.0.0.zip
 `tools/dev.py`
 
 开发者日常使用的统一入口。优先用它，而不是记住所有底层脚本。
-
-### 项目初始化
-
-`tools/bootstrap_project.py`
-
-从模板复制新项目并替换元数据。通常通过 `tools/dev.py bootstrap` 调用。
 
 ### 本地和 CI 打包
 

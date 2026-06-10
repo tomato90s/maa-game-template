@@ -15,38 +15,20 @@ Use this repository when you want a small Maa project skeleton with:
 ## Quick Start
 
 1. Click **Use this template** on GitHub, or clone this repository.
-2. Run the bootstrap helper:
-
-```bash
-python tools/bootstrap_project.py \
-  --output ../maa-demo-game \
-  --project-name maa-demo-game \
-  --title "MAA Demo Game" \
-  --github-repo your-name/maa-demo-game \
-  --package com.example.game \
-  --project-id MaaDemoGame \
-  --yes
-```
-
-3. Edit `assets/interface.json`:
+2. Implement or edit `assets/interface.json` according to the Maa ProjectInterface protocol:
    - `name`
    - `title`
    - `description`
    - `github`
    - `welcome`
-4. Replace the sample task in `assets/resource/pipeline/example.json` with real recognition and action nodes.
-5. Run local checks:
+3. Replace the sample task in `assets/resource/pipeline/example.json` with real recognition and action nodes.
+4. Run local checks:
 
 ```bash
-npm ci
-npx @nekosu/maa-tools check
-python -m pip install jsonschema==4.26.0 referencing==0.37.0
-python tools/validate_schema.py \
-  --schema-dir deps/tools \
-  --resource-dirs assets/resource/pipeline \
-  --interface-files assets/interface.json \
-  --task-dirs assets/resource/tasks
+python tools/dev.py check
 ```
+
+See [Scripts and commands](docs/scripts.en.md) for the full command list.
 
 ## Repository Layout
 
@@ -65,7 +47,7 @@ docs/
 
 ## Documentation
 
-- [Bootstrap a new game project](docs/bootstrap.en.md)
+- [Project bootstrap checklist](docs/bootstrap.en.md)
 - [Add a task](docs/add-task.en.md)
 - [Default Python custom actions](docs/custom-actions.en.md)
 - [Scripts and commands](docs/scripts.en.md)

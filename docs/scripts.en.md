@@ -12,27 +12,6 @@ Lower-level scripts are still available for CI and advanced debugging.
 
 ## Common Commands
 
-### Create a project from this template
-
-Use this command to copy the template into a new Maa game project and replace the project name, repository, package name, and CI artifact prefix.
-
-```bash
-python tools/dev.py bootstrap \
-  --output ../maa-demo-game \
-  --project-name maa-demo-game \
-  --title "MAA Demo Game" \
-  --github-repo owner/maa-demo-game \
-  --package com.example.game \
-  --project-id MaaDemoGame \
-  --yes
-```
-
-The lower-level script is:
-
-```bash
-python tools/bootstrap_project.py ...
-```
-
 ### Run local checks
 
 Use this before committing to validate resources, schemas, and Maa project structure.
@@ -101,8 +80,13 @@ This is usually used by the CI release workflow. Run it locally when debugging r
 ```bash
 python tools/dev.py update-package \
   --version v0.0.0 \
-  --github-repo owner/repo \
   --root install
+```
+
+By default, the repository name is inferred from the current GitHub remote. Add this only when you need to override it:
+
+```bash
+--github-repo owner/repo
 ```
 
 Output files:
@@ -119,12 +103,6 @@ resource-update-v0.0.0.zip
 `tools/dev.py`
 
 The unified command wrapper for daily development. Prefer this over memorizing every lower-level script.
-
-### Project Bootstrap
-
-`tools/bootstrap_project.py`
-
-Copies this template into a new project and replaces metadata. Usually called through `tools/dev.py bootstrap`.
 
 ### Local and CI Packaging
 

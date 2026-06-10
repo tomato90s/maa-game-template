@@ -1,38 +1,12 @@
-# 创建新游戏项目
+# 项目初始化清单
 
 [English](bootstrap.en.md)
 
-建议先完成最小改名，再逐步替换真实游戏资源。
+通过 GitHub **Use this template** 创建新仓库后，按这个清单整理项目。
 
-## 初始化脚本
+模板不会生成或改写 `interface.json`。请根据 Maa ProjectInterface 协议和你的项目需求自行实现。
 
-在模板仓库中运行：
-
-```bash
-python tools/dev.py bootstrap \
-  --output ../maa-demo-game \
-  --project-name maa-demo-game \
-  --title "MAA Demo Game" \
-  --github-repo your-name/maa-demo-game \
-  --package com.example.game \
-  --project-id MaaDemoGame \
-  --yes
-```
-
-脚本会复制模板到输出目录，跳过本地构建/运行产物，并替换主要项目字段。
-
-## 维护者说明：开启 GitHub Template 模式
-
-如果你维护的是模板仓库本身，推送到 GitHub 后可以开启模板模式：
-
-1. 打开 GitHub 仓库页面。
-2. 进入 **Settings**。
-3. 启用 **Template repository**。
-4. 回到仓库首页，使用 **Use this template** 创建新项目。
-
-通过模板创建的新仓库会拥有全新的 Git 历史。它不是 fork，也不会自动接收模板仓库后续更新。
-
-## 必改字段
+## 1. 项目元数据
 
 编辑 `assets/interface.json`：
 
@@ -42,26 +16,32 @@ python tools/dev.py bootstrap \
 - `github`：你的仓库地址
 - `welcome`：兼容启动器显示的首次欢迎信息
 
+## 2. CI 项目名
+
 编辑 `.github/workflows/install.yml`：
 
-- `PROJECT_ID`：CI 和 GitHub Release 使用的 artifact 前缀
+```yaml
+env:
+  PROJECT_ID: MaaGameTemplate
+```
+
+`PROJECT_ID` 是 CI artifact 和 release 包名的前缀。真实项目里建议改成自己的项目名，例如 `MaaExampleGame`。
+
+## 3. README
 
 编辑 `README.md`：
 
 - 替换模板描述为你的游戏项目说明
 - 说明支持的模拟器、分辨率、语言和登录前提
+- 删除不适合你项目的示例说明
 
-## 启动包名
+## 4. 示例任务
 
-替换 `assets/resource/pipeline/startup.json` 中的占位包名：
+`assets/resource/pipeline/startup.json` 和 `assets/resource/pipeline/example.json` 都只是示例。
 
-```json
-"package": "com.example.game"
-```
+不是所有项目都需要自动启动游戏。如果不需要，可以删除示例启动任务，或把它替换为“确认游戏已打开”的节点。
 
-如果你的项目不需要自动启动游戏，可以把 `StartApp` 替换为“确认游戏已打开”的节点。
-
-## 资源文件
+## 5. 资源文件
 
 截图和模板图放在：
 
@@ -77,7 +57,7 @@ assets/resource/model/ocr/
 
 模板默认不包含 OCR 模型文件。需要 OCR 时，可以加入自己的模型，或从 Maa common assets 复制。
 
-## Schema 文件
+## 6. Schema 文件
 
 模板把 MaaFramework JSON schema 文件保存在：
 
