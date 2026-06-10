@@ -72,17 +72,6 @@ docs/
 - [CI 工作流](docs/ci.md)
 - [Release 打包](docs/release.md)
 
-## 将本仓库设为 GitHub 模板
-
-把这个仓库推送到 GitHub 后：
-
-1. 打开 GitHub 仓库页面。
-2. 进入 **Settings**。
-3. 启用 **Template repository**。
-4. 回到仓库首页，使用 **Use this template** 创建新项目。
-
-通过模板创建的新仓库会拥有全新的 Git 历史。它不是 fork，也不会自动接收模板仓库后续更新。
-
 ## Release
 
 推送一个 `v*` tag 即可创建 GitHub Release：

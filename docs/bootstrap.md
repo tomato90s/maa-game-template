@@ -19,6 +19,17 @@ python tools/bootstrap_project.py \
 
 The helper copies the template to the output directory, skips local build/runtime artifacts, and replaces the main project fields.
 
+## Maintainer Note: Enable GitHub Template Mode
+
+If you maintain the template repository itself, enable GitHub template mode after pushing it:
+
+1. Open the repository on GitHub.
+2. Go to **Settings**.
+3. Enable **Template repository**.
+4. Return to the repository home page and use **Use this template** to create new projects.
+
+Repositories created from a template start with a fresh history. They are not forks and do not automatically receive later template updates.
+
 ## Required Renames
 
 Edit `assets/interface.json`:

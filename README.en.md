@@ -72,17 +72,6 @@ docs/
 - [CI workflows](docs/ci.md)
 - [Release packaging](docs/release.md)
 
-## Make This Repository a GitHub Template
-
-After pushing this repository to GitHub:
-
-1. Open the repository on GitHub.
-2. Go to **Settings**.
-3. Enable **Template repository**.
-4. Return to the repository home page and use **Use this template** to create new projects.
-
-Repositories created from a template start with a fresh history. They are not forks and do not automatically receive later template updates.
-
 ## Release
 
 Push a `v*` tag to create a GitHub Release:
