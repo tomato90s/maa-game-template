@@ -1,31 +1,33 @@
-# Release Packaging
+# Release 打包
 
-## Create a Release
+[English](release.en.md)
 
-Create and push a `v*` tag:
+## 创建 Release
+
+推送一个 `v*` tag：
 
 ```bash
 git tag v0.1.0
 git push origin v0.1.0
 ```
 
-The `install.yml` workflow will:
+`install.yml` workflow 会执行：
 
-1. Download MaaFramework.
-2. Set up embedded Python.
-3. Copy `assets/resource`, `assets/interface.json`, and `agent`.
-4. Install Python dependencies.
-5. Upload platform artifacts.
-6. Create a GitHub Release for the tag.
-7. Generate resource update packages and manifests.
+1. 下载 MaaFramework。
+2. 设置嵌入式 Python。
+3. 复制 `assets/resource`、`assets/interface.json` 和 `agent`。
+4. 安装 Python 依赖。
+5. 上传平台 artifact。
+6. 为 tag 创建 GitHub Release。
+7. 生成资源更新包和 manifest。
 
-## Manual Test Build
+## 手动测试打包
 
-Use GitHub Actions **Run workflow** on `install.yml` to produce artifacts without creating a GitHub Release.
+在 GitHub Actions 中手动运行 `install.yml`，可以生成 artifact，但不会创建 GitHub Release。
 
-## Resource Update Packages
+## 资源更新包
 
-The release workflow includes these paths in update packages:
+release workflow 默认把这些路径加入资源更新包：
 
 ```text
 agent/**/*.py
@@ -35,4 +37,4 @@ resource/model/**/*
 interface.json
 ```
 
-Add more include patterns in `.github/workflows/install.yml` if your project needs to update other resources.
+如果项目还需要更新其他资源，可以在 `.github/workflows/install.yml` 中添加更多 include pattern。

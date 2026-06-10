@@ -1,90 +1,10 @@
-# Default Python Custom Actions
+# 默认 Python 自定义动作
 
-The template enables the Python agent by default and registers common actions in `agent/actions.py`.
+[English](custom-actions.en.md)
 
-中文说明见下方。
+模板默认启用 Python agent，并在 `agent/actions.py` 中注册几个常用 action。
 
-## Available Actions
-
-### CenterClick
-
-Clicks the center of the current recognition box.
-
-```json
-{
-    "action": {
-        "type": "Custom",
-        "param": {
-            "custom_action": "CenterClick"
-        }
-    }
-}
-```
-
-### OffsetClick
-
-Clicks the center of the current recognition box with an offset.
-
-```json
-{
-    "action": {
-        "type": "Custom",
-        "param": {
-            "custom_action": "OffsetClick",
-            "custom_action_param": {
-                "x": 12,
-                "y": -4
-            }
-        }
-    }
-}
-```
-
-### NodeOverride
-
-Overrides pipeline nodes at runtime.
-
-```json
-{
-    "action": {
-        "type": "Custom",
-        "param": {
-            "custom_action": "NodeOverride",
-            "custom_action_param": {
-                "SomeNode": {
-                    "next": [
-                        "NoopDone"
-                    ]
-                }
-            }
-        }
-    }
-}
-```
-
-### DisableNode
-
-Disables a node at runtime.
-
-```json
-{
-    "action": {
-        "type": "Custom",
-        "param": {
-            "custom_action": "DisableNode",
-            "custom_action_param": {
-                "node_name": "SomeNode"
-            }
-        }
-    }
-}
-```
-
-## 中文说明
-
-模板默认启用 Python agent，并在 `agent/actions.py` 中注册了几个常用 action。
-
-### CenterClick
+## CenterClick
 
 点击当前识别框中心。
 
@@ -99,7 +19,7 @@ Disables a node at runtime.
 }
 ```
 
-### OffsetClick
+## OffsetClick
 
 点击当前识别框中心，并增加偏移量。
 
@@ -118,7 +38,7 @@ Disables a node at runtime.
 }
 ```
 
-### NodeOverride
+## NodeOverride
 
 运行时覆盖 pipeline 节点。
 
@@ -140,7 +60,7 @@ Disables a node at runtime.
 }
 ```
 
-### DisableNode
+## DisableNode
 
 运行时禁用某个节点。
 

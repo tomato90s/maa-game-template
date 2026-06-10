@@ -1,13 +1,15 @@
-# Add a Task
+# 新增任务
 
-A visible task usually needs two files:
+[English](add-task.en.md)
 
-- A pipeline file under `assets/resource/pipeline/`
-- A task wrapper under `assets/resource/tasks/`
+一个会出现在界面里的任务通常需要两个文件：
 
-## 1. Add the Pipeline
+- pipeline 文件：放在 `assets/resource/pipeline/`
+- task wrapper 文件：放在 `assets/resource/tasks/`
 
-Create a pipeline entry, for example `assets/resource/pipeline/daily_login.json`:
+## 1. 新增 pipeline
+
+例如创建 `assets/resource/pipeline/daily_login.json`：
 
 ```json
 {
@@ -30,9 +32,9 @@ Create a pipeline entry, for example `assets/resource/pipeline/daily_login.json`
 }
 ```
 
-## 2. Add the Task Wrapper
+## 2. 新增 task wrapper
 
-Create `assets/resource/tasks/example/daily_login_task.json`:
+例如创建 `assets/resource/tasks/example/daily_login_task.json`：
 
 ```json
 {
@@ -51,9 +53,9 @@ Create `assets/resource/tasks/example/daily_login_task.json`:
 }
 ```
 
-## 3. Import the Task
+## 3. 导入任务
 
-Add the wrapper path to `assets/interface.json`:
+把 task wrapper 路径加入 `assets/interface.json`：
 
 ```json
 "import": [
@@ -63,9 +65,15 @@ Add the wrapper path to `assets/interface.json`:
 ]
 ```
 
-## 4. Validate
+## 4. 校验
 
-Run:
+运行：
+
+```bash
+python tools/dev.py check
+```
+
+也可以手动运行底层命令：
 
 ```bash
 npx @nekosu/maa-tools check
@@ -76,4 +84,4 @@ python tools/validate_schema.py \
   --task-dirs assets/resource/tasks
 ```
 
-The template also includes common Python custom actions such as `CenterClick` and `OffsetClick`. See [Default Python Custom Actions](custom-actions.md).
+模板还内置了 `CenterClick`、`OffsetClick` 等常用 Python 自定义动作，详见 [默认 Python 自定义动作](custom-actions.md)。

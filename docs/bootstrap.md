@@ -1,13 +1,15 @@
-# Bootstrap a New Game Project
+# 创建新游戏项目
 
-Start with the smallest working rename, then add real game resources.
+[English](bootstrap.en.md)
 
-## Bootstrap Helper
+建议先完成最小改名，再逐步替换真实游戏资源。
 
-From this template repository, run:
+## 初始化脚本
+
+在模板仓库中运行：
 
 ```bash
-python tools/bootstrap_project.py \
+python tools/dev.py bootstrap \
   --output ../maa-demo-game \
   --project-name maa-demo-game \
   --title "MAA Demo Game" \
@@ -17,70 +19,70 @@ python tools/bootstrap_project.py \
   --yes
 ```
 
-The helper copies the template to the output directory, skips local build/runtime artifacts, and replaces the main project fields.
+脚本会复制模板到输出目录，跳过本地构建/运行产物，并替换主要项目字段。
 
-## Maintainer Note: Enable GitHub Template Mode
+## 维护者说明：开启 GitHub Template 模式
 
-If you maintain the template repository itself, enable GitHub template mode after pushing it:
+如果你维护的是模板仓库本身，推送到 GitHub 后可以开启模板模式：
 
-1. Open the repository on GitHub.
-2. Go to **Settings**.
-3. Enable **Template repository**.
-4. Return to the repository home page and use **Use this template** to create new projects.
+1. 打开 GitHub 仓库页面。
+2. 进入 **Settings**。
+3. 启用 **Template repository**。
+4. 回到仓库首页，使用 **Use this template** 创建新项目。
 
-Repositories created from a template start with a fresh history. They are not forks and do not automatically receive later template updates.
+通过模板创建的新仓库会拥有全新的 Git 历史。它不是 fork，也不会自动接收模板仓库后续更新。
 
-## Required Renames
+## 必改字段
 
-Edit `assets/interface.json`:
+编辑 `assets/interface.json`：
 
-- `name`: machine-readable project id, such as `maa-example-game`
-- `title`: display title, such as `MAA Example Game`
-- `description`: short project description
-- `github`: your repository URL
-- `welcome`: first-run message shown by compatible launchers
+- `name`：机器可读的项目 id，例如 `maa-example-game`
+- `title`：显示名称，例如 `MAA Example Game`
+- `description`：项目简介
+- `github`：你的仓库地址
+- `welcome`：兼容启动器显示的首次欢迎信息
 
-Edit `.github/workflows/install.yml`:
+编辑 `.github/workflows/install.yml`：
 
-- `PROJECT_ID`: artifact prefix used by CI and GitHub Releases
+- `PROJECT_ID`：CI 和 GitHub Release 使用的 artifact 前缀
 
-Edit `README.md`:
+编辑 `README.md`：
 
-- Replace the template description with your game-specific description.
-- Document supported emulator, resolution, language, and login assumptions.
+- 替换模板描述为你的游戏项目说明
+- 说明支持的模拟器、分辨率、语言和登录前提
 
-## Startup Package
+## 启动包名
 
-Replace the placeholder package in `assets/resource/pipeline/startup.json`:
+替换 `assets/resource/pipeline/startup.json` 中的占位包名：
 
 ```json
 "package": "com.example.game"
 ```
 
-Use your actual Android package name. If your project does not start the game automatically, replace `StartApp` with a node that verifies the game is already open.
+如果你的项目不需要自动启动游戏，可以把 `StartApp` 替换为“确认游戏已打开”的节点。
 
-## Assets
+## 资源文件
 
-Put screenshots and template images in:
+截图和模板图放在：
 
 ```text
 assets/resource/image/
 ```
 
-Put OCR models in:
+OCR 模型放在：
 
 ```text
 assets/resource/model/ocr/
 ```
 
-The template does not include OCR model files by default. Add your own models or copy them from Maa common assets when your project needs OCR.
+模板默认不包含 OCR 模型文件。需要 OCR 时，可以加入自己的模型，或从 Maa common assets 复制。
 
-## Schema Files
+## Schema 文件
 
-The template keeps MaaFramework JSON schema files in:
+模板把 MaaFramework JSON schema 文件保存在：
 
 ```text
 deps/tools/
 ```
 
-Refresh these files from MaaFramework when you upgrade to a new schema version.
+升级 MaaFramework schema 版本时，可以刷新这些文件。
