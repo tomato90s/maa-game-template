@@ -68,7 +68,7 @@ docs/
 - [Bootstrap a new game project](docs/bootstrap.md)
 - [Add a task](docs/add-task.md)
 - [Default Python custom actions](docs/custom-actions.md)
-- [Scripts and commands](docs/scripts.md)
+- [Scripts and commands](docs/scripts.en.md)
 - [CI workflows](docs/ci.md)
 - [Release packaging](docs/release.md)
 
